@@ -1,24 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState, useRef, useEffect } from "react";
+import "./App.css";
 
 function App() {
+  const [value, setValue] = useState("");
+  const [updatedValue, setUpdatedValue] = useState(value);
+  const [isShowButtonClicked, setIsShowButtonClicked] = useState(false);
+  const previousDisplayedValue = useRef('');
+
+  const handleInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.currentTarget.value);
+  };
+
+  const submitInputValue = () => {
+    setUpdatedValue(value);
+    setIsShowButtonClicked(false);
+  };
+
+  const showInputValue = () => {
+    setIsShowButtonClicked(true);
+  };
+
+  useEffect(() => {
+    previousDisplayedValue.current = updatedValue;
+  }, [updatedValue])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="__mainField">
+      <div className="__inputField">
+        <input
+          type="text"
+          placeholder=" ...."
+          className="__inputBox"
+          onChange={handleInputValue}
+          value={value}
+        />
+        <button className="__submitButton" onClick={submitInputValue}>
+          Submit
+        </button>
+      </div>
+      <div className="__displayField">
+        <button className="__showButton" onClick={showInputValue}>
+          Show
+        </button>
+        <h1 className="__display__">
+          {isShowButtonClicked ? updatedValue : previousDisplayedValue.current}
+        </h1>
+      </div>
     </div>
   );
 }
